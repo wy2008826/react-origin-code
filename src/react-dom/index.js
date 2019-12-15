@@ -1,52 +1,47 @@
 
 import React from '../react/'
 
-//将虚拟dom 转换为真实dom
-const render = (vnode,container)=>{
+const render =(vnode,container)=>{
+    return container.appendChild(_render(vnode))
+}
 
-    if(!vnode){
+
+//将虚拟dom 转换为真实dom
+const _render = (vnode)=>{
+
+    console.log('vnode:',vnode);
+    if(!vnode || typeof vnode ==='boolean'){
         return null;
     }
-
+    if(typeof vnode === 'number'){
+        vnode = String(vnode)
+    }
     if(typeof vnode === 'string'){
         let textNode = document.createTextNode(vnode);
-        container.appendChild(textNode);
         return textNode;
     }
-    if(typeof vnode === 'function'){
-        //函数组件
-        if(!vnode.prototype){
-            return render(vnode(),container);
-        }
-
-        // class组件
-        if(vnode.prototype && vnode.prototype.render){
-            let comp = new vnode();
-            return render(comp.render(),container);
-        }
+    if(typeof vnode.tag === 'function'){
+        let comp = createComponent(vnode)
+        
+        console.log('comp:',comp);
+        return _render(comp.render())
     }
+   
 
     const {
         tag,
         attrs,
         childrens
     } = vnode;
-   
-    console.log('vnode:',vnode);
 
     let dom = document.createElement(tag);
     attrs && (Object.keys(attrs)).map((attr)=>{
         setAttribute(dom,attr,attrs[attr]);
-        
     });
 
     childrens && childrens.length && childrens.map((vnode)=>{
-        dom.appendChild(render(vnode,dom));
+        return render(vnode,dom);
     });
-    
-    console.log('dom',dom);
-
-    container.appendChild(dom);
     return dom;
 }
 
@@ -78,6 +73,22 @@ function setAttribute (dom,attr,value){
     }
     
     dom.setAttribute(attr,value)
+}
+
+
+function createComponent(vnode){
+    //函数组件
+    if(!vnode.tag.prototype){
+        let comp = new React.Component(vnode.attrs);
+        comp.constructor = vnode.tag;
+        comp.render = vnode.tag;
+        return comp;
+    }
+    // class组件
+    if(vnode.tag.prototype && vnode.tag.prototype.render){
+        let comp = new vnode.tag(vnode.attrs);
+        return comp;
+    }
 }
 
 export default {

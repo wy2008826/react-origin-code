@@ -35,11 +35,11 @@ jsx = React.createElement("div", {
  * **/
 
 
-const fnJsx = (props) => {
+const FnComp= (props) => {
     return jsx;
 }
 
-class ClassJsx extends React.Component {
+class ClassComp extends React.Component {
     constructor(props){
         super(props);
     }
@@ -48,10 +48,11 @@ class ClassJsx extends React.Component {
     }
 }
 
-console.log('jsx:', jsx, fnJsx, ClassJsx,ClassJsx.prototype.render);
+console.log('jsx:', jsx, 'Fnjsx:',<FnComp title='FnComp'/>, 'ClassJsx',<ClassComp  title='ClassComp'/>);
 
-
-ReactDOM.render(ClassJsx, document.getElementById('root'));
+// ReactDOM.render(jsx, document.getElementById('root'));
+// ReactDOM.render(<FnComp  title='FnComp'/> , document.getElementById('root'));
+ReactDOM.render(<ClassComp  name='ClassComp'/> , document.getElementById('root'));
 
 
 
