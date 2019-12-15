@@ -1,11 +1,12 @@
 
 
 class Component {
-    constructor(){
-
+    constructor(props){
+        this.props=props;
+        this.state={}
     }
-
 }
+
 
 const createElement = (tag,attrs,...childrens)=>{
     return {
@@ -17,5 +18,6 @@ const createElement = (tag,attrs,...childrens)=>{
 
 
 export default {
+    Component,
     createElement
 };
