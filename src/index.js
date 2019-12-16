@@ -14,7 +14,7 @@ const jsx = <div title='title'
     onClick={() => { alert(123) }}
 >
     <span style='background-color:#f95'>hello</span>
-    <span style={{ color: 'red' ,'backgroundColor':'#f95'}}>fnJsx</span>
+    <span style={{ color: 'red' ,'backgroundColor':'#f95'}}>jsx</span>
 </div>;
 
 /** 
@@ -36,23 +36,37 @@ jsx = React.createElement("div", {
 
 
 const FnComp= (props) => {
-    return jsx;
+    return <div>
+        {jsx}
+        {/* {props.title} */}
+    </div>;
 }
 
 class ClassComp extends React.Component {
     constructor(props){
         super(props);
+        this.state ={
+            num:0
+        }
     }
     render() {
-        return jsx;
+        return <div>
+            {jsx}
+            <p onClick={()=>{this.setState({num:this.state.num+1})}}>
+                {this.state.num}
+            </p>
+            {/* {this.props.title} */}
+        </div>;
     }
 }
 
 console.log('jsx:', jsx, 'Fnjsx:',<FnComp title='FnComp'/>, 'ClassJsx',<ClassComp  title='ClassComp'/>);
 
-// ReactDOM.render(jsx, document.getElementById('root'));
-// ReactDOM.render(<FnComp  title='FnComp'/> , document.getElementById('root'));
-ReactDOM.render(<ClassComp  name='ClassComp'/> , document.getElementById('root'));
+ReactDOM.render(<div>
+    {jsx}
+    <FnComp title='FnComp'/>
+    <ClassComp  title='ClassComp'/> 
+</div>, document.getElementById('root'));
 
 
 

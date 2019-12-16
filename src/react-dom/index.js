@@ -9,22 +9,23 @@ const render =(vnode,container)=>{
 //将虚拟dom 转换为真实dom
 const _render = (vnode)=>{
 
-    console.log('vnode:',vnode);
-    if(!vnode || typeof vnode ==='boolean'){
+    
+    if(vnode === null || vnode === undefined  || typeof vnode ==='boolean'){
         return null;
     }
     if(typeof vnode === 'number'){
         vnode = String(vnode)
     }
+    console.log('vnode:',vnode);
+
     if(typeof vnode === 'string'){
         let textNode = document.createTextNode(vnode);
         return textNode;
     }
     if(typeof vnode.tag === 'function'){
-        let comp = createComponent(vnode)
-        
-        console.log('comp:',comp);
-        return _render(comp.render())
+        let component = createComponent(vnode.tag,vnode.attrs);//为什么不直接把vnode传递进去
+        setComponentProps(component,vnode.attrs);
+        return component.base;
     }
    
 
@@ -76,19 +77,63 @@ function setAttribute (dom,attr,value){
 }
 
 
-function createComponent(vnode){
+function createComponent(component,props){
     //函数组件
-    if(!vnode.tag.prototype){
-        let comp = new React.Component(vnode.attrs);
-        comp.constructor = vnode.tag;
-        comp.render = vnode.tag;
+    if(!component.prototype){
+        let comp = new React.Component(props);
+        comp.constructor = component;
+        comp.render = ()=>{return comp.constructor(props)};
         return comp;
     }
     // class组件
-    if(vnode.tag.prototype && vnode.tag.prototype.render){
-        let comp = new vnode.tag(vnode.attrs);
+    if(component.prototype && component.prototype.render){
+        let comp = new component(props);
         return comp;
     }
+}
+
+
+function setComponentProps(component,props){
+    //生命周期
+    if(!component.base){
+        if(component.componentWillMount){
+            component.componentWillMount();
+        }
+    }else{
+        if(component.componentWillReceiveProps){
+            component.componentWillReceiveProps(props);
+        }
+    }
+    //赋值props
+    component.props=props;
+    renderComponent(component);
+}
+
+
+export function renderComponent(component){
+
+    const renderer = component.render();
+
+    if(component.base && component.componentWillUpdate){
+        component.componentWillUpdate();
+    }
+    const base =_render(renderer);
+    if(component.base){
+        if(component.componentDidUpdate){
+            component.componentDidUpdate();
+        }
+    }else{
+        if(component.componentDidMount){
+            component.componentDidMount();
+        }
+    }
+    //didmount是在真正插入daom节点之前完成的？
+    if ( component.base && component.base.parentNode ) {
+        component.base.parentNode.replaceChild( base, component.base );
+    }
+
+    component.base = base;
+    base._component = component;
 }
 
 export default {
