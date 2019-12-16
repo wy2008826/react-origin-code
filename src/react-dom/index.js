@@ -129,6 +129,7 @@ export function renderComponent(component){
     }
     //didmount是在真正插入daom节点之前完成的？
     if ( component.base && component.base.parentNode ) {
+        //组件更新是整个组件进行替换？
         component.base.parentNode.replaceChild( base, component.base );
     }
 
