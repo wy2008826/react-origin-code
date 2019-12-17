@@ -13,6 +13,9 @@ class Component {
 
 
 const createElement = (tag,attrs,...childrens)=>{
+    // createElement 为什么在组件更新的时候也会执行？
+    
+    // console.log('createElement');
     //移除冗余的attrs属性
     const {
         __source,

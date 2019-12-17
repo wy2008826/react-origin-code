@@ -96,8 +96,8 @@ function diffChild(newVdom,oldDom){
         }
     }
 
-    
     const newChildDoms = newVdom.childrens.map(child => vnodeToDom(child));
-
+    const newVdomChilds = newVdom.childrens||[];
+    
 
 }
