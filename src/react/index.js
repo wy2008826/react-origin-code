@@ -13,9 +13,16 @@ class Component {
 
 
 const createElement = (tag,attrs,...childrens)=>{
+    //移除冗余的attrs属性
+    const {
+        __source,
+        __self,
+        ..._attrs
+    } =attrs;
+
     return {
         tag,
-        attrs,
+        attrs:_attrs,
         childrens
     }
 }

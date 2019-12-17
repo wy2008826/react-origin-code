@@ -13,12 +13,12 @@ const jsx = <div title='title'
     className='title-head'
     onClick={() => { alert(123) }}
 >
-    <span style='background-color:#f95'>hello</span>
+    <span style={{'backgroundColor':'#f95'}}>A </span>
     <span style={{ color: 'red' ,'backgroundColor':'#f95'}}>jsx</span>
 </div>;
 
-/** 
- *以上代码经过babel转换后，相当于如下代码：  
+/**
+ *以上代码经过babel转换后，相当于如下代码：
 jsx = React.createElement("div", {
     title: "title"
 }, "hello", React.createElement("span", null, "React"));
@@ -29,9 +29,9 @@ jsx = React.createElement("div", {
 
 
 /**
- * jsx经过 React.createElement 处理后，转换成层级很深的object对象 
+ * jsx经过 React.createElement 处理后，转换成层级很深的object对象
  * ReactDom.render 函数会处理这个Object对象转换成真实的dom对象
- * 
+ *
  * **/
 
 
@@ -60,13 +60,67 @@ class ClassComp extends React.Component {
     }
 }
 
-console.log('jsx:', jsx, 'Fnjsx:',<FnComp title='FnComp'/>, 'ClassJsx',<ClassComp  title='ClassComp'/>);
+// console.log('jsx:', jsx, '\n\nFnComp:',FnComp,'\n\n<FnComp />',<FnComp title='FnComp'/>, 'ClassJsx',<ClassComp  title='ClassComp'/>);
 
-ReactDOM.render(<div>
-    {jsx}
-    <FnComp title='FnComp'/>
-    <ClassComp  title='ClassComp'/> 
-</div>, document.getElementById('root'));
+
+class Home extends React.Component{
+    state={
+        num:0
+    }
+    addNum =()=>{
+        this.setState({
+            num:this.state.num+1
+        })
+    }
+    shouldComponentUpdate(){
+        console.log('shouldComponentUpdate');
+    }
+    componentWillReceiveProps(props){
+        console.log('componentWillReceiveProps');
+    }
+    componentWillMount(){
+        console.log('componentWillMount');
+    }
+    componentDidMount(){
+        console.log('componentDidMount');
+    }
+    componentWillUpdate(){
+        console.log('componentWillUpdate');
+    }
+    componentDidUpdate(){
+        console.log('componentDidUpdate');
+    }
+    render(){
+        const {
+            num
+        } = this.state;
+
+        const config = {
+            1:jsx,
+            2:<FnComp title='FnComp'/>,
+            3:<FnComp title='FnComp'/>,
+            4:<ClassComp  title='ClassComp'/>
+        }
+        return  <div>
+            <button onClick={this.addNum}>
+                Home:num {num}
+            </button>
+
+            { config[num] || '其他组件'}
+        </div>
+    }
+}
+
+
+const root = document.getElementById('root');
+ReactDOM.render(<Home name={123} />, root);
+
+
+//这种方式 children没有挂载？
+// ReactDOM.render(<Home name={123} >
+//     <FnComp title='FnComp'/>
+//     <ClassComp  title='ClassComp'/>
+// </Home>, document.getElementById('root'));
 
 
 
