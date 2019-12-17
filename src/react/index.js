@@ -20,10 +20,15 @@ const createElement = (tag,attrs,...childrens)=>{
         ..._attrs
     } =attrs;
 
+    let key=undefined;
+    if(attrs && (attrs.key && attrs.key ===0)){
+        key = attrs.key
+    }
     return {
         tag,
         attrs:_attrs,
-        childrens
+        childrens,
+        key
     }
 }
 

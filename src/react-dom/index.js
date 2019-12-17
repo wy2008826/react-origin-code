@@ -106,7 +106,7 @@ function createComponent(component,props){
  *
 **/
 
-function setComponentProps(component,props){
+export function setComponentProps(component,props){
     //生命周期
     if(!component.base){
         if(component.componentWillMount){
@@ -151,7 +151,7 @@ export function renderComponent(component){
 
     let base;
     if(component.base){
-        base =diff(component,component.base);//针对非组件形式的虚拟dom 由于不会调用renderComponent 所以都会导致重新渲染
+        base =diff(renderer,component.base);//针对非组件形式的虚拟dom 由于不会调用renderComponent 所以都会导致重新渲染
     }else{
         base =vnodeToDom(renderer);
     }

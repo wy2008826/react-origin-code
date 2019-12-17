@@ -1,4 +1,4 @@
-import {vnodeToDom} from './index'
+import {vnodeToDom,setComponentProps, renderComponent} from './index'
 
 
 /**
@@ -8,7 +8,7 @@ import {vnodeToDom} from './index'
  **/
 
 
-export default function (newVdom, oldDom) {
+export default function diff(newVdom, oldDom) {
     console.log('diff',newVdom);
     //新节点是文本节点
     if (typeof newVdom === 'string') {
@@ -27,6 +27,11 @@ export default function (newVdom, oldDom) {
         return diffComponent(newVdom, oldDom);
     }
 
+    // diffAttribute();
+
+    if(newVdom.childrens && newVdom.childrens.length){
+        diffChild(newVdom,oldDom);
+    }
     return oldDom;
 }
 
@@ -68,8 +73,31 @@ function diffComponent(newVdom, oldDom) {
             oldDom.parentNode.replaceChild(oldDom, newDom)
         }
     } else {
-
+        setComponentProps(oldDom._component,newVdom.attrs);
+        renderComponent(oldDom._component);
     }
 
     return newDom;
+}
+
+function diffChild(newVdom,oldDom){
+    console.log('diffChild',newVdom);
+
+    const keyed = {};
+    const childs=[];
+    const oldChildDoms = oldDom ? oldDom.childNodes ||[]:[];
+    
+    for(let i=0;i<oldChildDoms.length;i++){
+        let childNode = oldChildDoms[i];
+        if(childNode.key){
+            keyed[childNode.key]=childNode
+        }else{
+            childs.push(childNode);
+        }
+    }
+
+    
+    const newChildDoms = newVdom.childrens.map(child => vnodeToDom(child));
+
+
 }

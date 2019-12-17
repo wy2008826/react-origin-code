@@ -113,7 +113,7 @@ class Home extends React.Component{
 
 
 const root = document.getElementById('root');
-ReactDOM.render(<Home name={123} />, root);
+ReactDOM.render(<Home key={111} name={123} />, root);
 
 
 //这种方式 children没有挂载？
