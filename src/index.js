@@ -10,7 +10,7 @@ import * as serviceWorker from './serviceWorker';
 
 // 虚拟dom  转换为真实dom  babel转换成虚拟dom
 const jsx = <div title='title'
-    className='title-head'
+    className='jsx'
     onClick={() => { alert(123) }}
 >
     <span style={{'backgroundColor':'#f95'}}>A </span>
@@ -36,9 +36,8 @@ jsx = React.createElement("div", {
 
 
 const FnComp= (props) => {
-    return <div>
-        {jsx}
-        {/* {props.title} */}
+    return <div className={'Fn-Comp'}>
+        FnComp
     </div>;
 }
 
@@ -50,12 +49,8 @@ class ClassComp extends React.Component {
         }
     }
     render() {
-        return <div>
-            {jsx}
-            <p onClick={()=>{this.setState({num:this.state.num+1})}}>
-                {this.state.num}
-            </p>
-            {/* {this.props.title} */}
+        return <div className={'Class-Comp'}>
+            ClassComp
         </div>;
     }
 }
@@ -101,7 +96,7 @@ class Home extends React.Component{
             3:<FnComp title='FnComp'/>,
             4:<ClassComp  title='ClassComp'/>
         }
-        return  <div>
+        return  <div className={'Home-Container'}>
             <button onClick={this.addNum}>
                 Home:num {num}
             </button>
