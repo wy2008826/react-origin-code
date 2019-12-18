@@ -113,6 +113,7 @@ function diffChild(newVdom, oldDom) {
     const childs = [];
     const oldChildDoms = oldDom ? oldDom.childNodes || [] : [];
 
+    console.log('oldChildDoms:',oldChildDoms);
     for (let i = 0; i < oldChildDoms.length; i++) {
         let childNode = oldChildDoms[i];
         if (childNode.key) {
