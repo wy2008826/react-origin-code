@@ -14,19 +14,16 @@ class Component {
 
 const createElement = (tag,attrs,...childrens)=>{
     // createElement 为什么在组件更新的时候也会执行？
-    
+
     // console.log('createElement');
     //移除冗余的attrs属性
-    const {
+    let {
         __source,
         __self,
+        key,
         ..._attrs
     } =attrs;
 
-    let key=undefined;
-    if(attrs && (attrs.key && attrs.key ===0)){
-        key = attrs.key
-    }
     return {
         tag,
         attrs:_attrs,

@@ -3,7 +3,8 @@ import React from '../react/'
 import diff from './diff';
 
 const render =(vnode,container)=>{
-    return container.appendChild(vnodeToDom(vnode))
+    return container.appendChild( (diff(vnode,vnode && vnode.base || null) ));
+    // return container.appendChild(vnodeToDom(vnode))
 }
 
 

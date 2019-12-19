@@ -92,16 +92,16 @@ class Home extends React.Component{
 
         const config = {
             1:jsx,
-            2:<FnComp title='FnComp'/>,
-            3:<FnComp title='FnComp'/>,
-            4:<ClassComp  title='ClassComp'/>
+            2:<FnComp key={'FnComp'} title='FnComp'/>,
+            3:<FnComp key={'FnComp1'} title='FnComp'/>,
+            4:<ClassComp  key={'ClassComp'} title='ClassComp'/>
         }
-        return  <div className={'Home-Container'}>
-            <button onClick={this.addNum}>
+        return  <div key='Home-Container' className={'Home-Container'}>
+            <button key={'button'} onClick={this.addNum}>
                 Home:num {num}
             </button>
 
-            { config[num] || '其他组件'}
+            {/*{ config[num] || '其他组件'}*/}
         </div>
     }
 }
