@@ -37,7 +37,7 @@ jsx = React.createElement("div", {
 
 const FnComp= (props) => {
     return <div className={'Fn-Comp'}>
-        FnComp
+        FnComp {props.title}
     </div>;
 }
 
@@ -60,7 +60,7 @@ class ClassComp extends React.Component {
 
 class Home extends React.Component{
     state={
-        num:0
+        num:1
     }
     addNum =()=>{
         this.setState({
@@ -93,15 +93,21 @@ class Home extends React.Component{
         const config = {
             1:jsx,
             2:<FnComp key={'FnComp'} title='FnComp'/>,
-            3:<FnComp key={'FnComp1'} title='FnComp'/>,
+            3:<FnComp key={'FnComp1'} title='FnComp1'/>,
             4:<ClassComp  key={'ClassComp'} title='ClassComp'/>
         }
+
         return  <div key='Home-Container' className={'Home-Container'}>
             <button key={'button'} onClick={this.addNum}>
-                Home:num {num}
+                {num}
+                <span>
+                    Home:num
+                    <span>
+                        {num}
+                    </span>
+                </span>
             </button>
-
-            {/*{ config[num] || '其他组件'}*/}
+            { config[num] || '其他组件'}
         </div>
     }
 }

@@ -4,7 +4,6 @@ import diff from './diff';
 
 const render =(vnode,container)=>{
     return container.appendChild( (diff(vnode,vnode && vnode.base || null) ));
-    // return container.appendChild(vnodeToDom(vnode))
 }
 
 
@@ -52,7 +51,7 @@ export const vnodeToDom = (vnode)=>{
 
 
 //设置真实dom的 attr props
-function setAttribute (dom,attr,value){
+export function setAttribute (dom,attr,value){
     //事件添加
     if(/on\w+/g.test(attr)){
         dom.addEventListener(attr.toLowerCase().substr(2),value);
@@ -151,11 +150,13 @@ export function renderComponent(component){
     }
 
     let base;
-    if(component.base){
-        base =diff(renderer,component.base);//针对非组件形式的虚拟dom 由于不会调用renderComponent 所以都会导致重新渲染
-    }else{
-        base =vnodeToDom(renderer);
-    }
+    base =diff(renderer,component.base);//针对非组件形式的虚拟dom 由于不会调用renderComponent 所以都会导致重新渲染
+
+    // if(component.base){
+    //     base =diff(renderer,component.base);//针对非组件形式的虚拟dom 由于不会调用renderComponent 所以都会导致重新渲染
+    // }else{
+    //     base =vnodeToDom(renderer);
+    // }
 
     if(component.base){
         if(component.componentDidUpdate){
@@ -168,8 +169,8 @@ export function renderComponent(component){
     }
     //didmount是在真正插入daom节点之前完成的？
     if ( component.base && component.base.parentNode ) {
-        //组件更新是整个组件进行替换？
-        component.base.parentNode.replaceChild( base, component.base );
+        //组件更新是整个组件进行替换？ 会导致组件全部更新掉了
+        // component.base.parentNode.replaceChild( base, component.base );
     }
 
     //至关重要的一步，diff算法需要从这里取数据进行比对
