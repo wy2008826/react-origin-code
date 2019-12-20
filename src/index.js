@@ -56,6 +56,9 @@ class ClassComp extends React.Component {
 }
 
 // console.log('jsx:', jsx, '\n\nFnComp:',FnComp,'\n\n<FnComp />',<FnComp title='FnComp'/>, 'ClassJsx',<ClassComp  title='ClassComp'/>);
+console.log('FnComp\n',<FnComp title='FnComp'/>);
+
+console.log('ClassComp\n',<ClassComp  title='ClassComp'/>);
 
 
 class Home extends React.Component{
@@ -63,8 +66,18 @@ class Home extends React.Component{
         num:1
     }
     addNum =()=>{
-        this.setState({
-            num:this.state.num+1
+        for(let i=0;i<100;i++){
+            // this.setState({
+            //     num:this.state.num+1
+            // })
+        }
+        // this.setState({
+        //     num:this.state.num+1
+        // });
+        this.setState((prevState)=>{
+            return {
+                num:prevState.num+1
+            }
         })
     }
     shouldComponentUpdate(){
@@ -102,11 +115,15 @@ class Home extends React.Component{
                 {num}
                 <span>
                     Home:num
-                    <span>
-                        {num}
-                    </span>
                 </span>
             </button>
+            <ul>
+                {
+                    [1,2,3].map((item)=>{
+                        return <p>{item}</p>
+                    })
+                }
+            </ul>
             { config[num] || '其他组件'}
         </div>
     }

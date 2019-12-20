@@ -1,32 +1,55 @@
 import {renderComponent} from '../react-dom'
+import _ from 'wy-utils';
+
+const queue = [];
+
+function enqueueState(stateChange, component) {
+    queue.push({
+        stateChange,
+        component
+    })
+}
 
 class Component {
-    constructor(props={}){
-        this.props=props;
-        this.state={}
+    constructor(props = {}) {
+        this.props = props;
+        this.state = {}
     }
-    setState(changedState){
-        Object.assign(this.state,changedState||{});
+
+    /**
+     * 支持函数式传参
+     * 优化，避免段时间内不停地setState导致的频繁渲染问题
+     * **/
+    setState(changedState) {
+        enqueueState(_.isFunction(changedState) ? changedState(this.state) : changedState, this);
+        // Object.assign(this.state, _.isFunction(changedState) ? changedState(this.state) : this.state, changedState || {});
+        //将changedState放入 队列中
         renderComponent(this);
     }
 }
 
 
-const createElement = (tag,attrs,...childrens)=>{
-    // createElement 为什么在组件更新的时候也会执行？
+const createElement = (tag, attrs, ...childrens) => {
+    /**
+     * createElement 为什么在组件更新的时候也会执行？
+     * 在每一次渲染组件的时候执行
+     * 执行完之后上一次挂载的 _component 和 base 为什么没有销毁？
+     * base挂载在组件实例上，组件实例是浏览器加载后就初始化了的
+     * 而_component则是挂载在真实dom上的，也不会被销毁
+     */
 
-    // console.log('createElement');
-    //移除冗余的attrs属性
+        // console.log('createElement');
+        //移除冗余的attrs属性
     let {
-        __source,
-        __self,
-        key,
-        ..._attrs
-    } =attrs;
+            __source,
+            __self,
+            key,
+            ..._attrs
+        } = attrs;
 
     return {
         tag,
-        attrs:_attrs,
+        attrs: _attrs,
         childrens,
         key
     }

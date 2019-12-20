@@ -126,8 +126,12 @@ function diffChild(newVdom, oldDom) {
         }
     }
 
-    const newVdomChilds = newVdom.childrens || [];
+    let newVdomChilds = newVdom.childrens || [];
 
+    //当子节点是数组的时候 一般见于 [items].map(_=>_)返回的数组
+    if(newVdomChilds[0] && Array.isArray(newVdomChilds[0]) ){
+        newVdomChilds = newVdomChilds[0]
+    }
     if (newVdomChilds && newVdomChilds.length) {
         let min = 0;
         let newVdomChildLength = newVdomChilds.length;
