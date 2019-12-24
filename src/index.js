@@ -67,18 +67,21 @@ class Home extends React.Component{
     }
     addNum =()=>{
         for(let i=0;i<100;i++){
-            // this.setState({
-            //     num:this.state.num+1
-            // })
+            this.setState((prevState)=>{
+                console.log('prevState:',prevState.num);
+                return {
+                    num:prevState.num+1
+                }
+            })
         }
         // this.setState({
         //     num:this.state.num+1
         // });
-        this.setState((prevState)=>{
-            return {
-                num:prevState.num+1
-            }
-        })
+        // this.setState((prevState)=>{
+        //     return {
+        //         num:prevState.num+1
+        //     }
+        // })
     }
     shouldComponentUpdate(){
         console.log('shouldComponentUpdate');

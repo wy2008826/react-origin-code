@@ -13,7 +13,7 @@ import {vnodeToDom, setComponentProps, renderComponent,setAttribute} from './ind
 
 
 export default function diff(newVdom, oldDom) {
-    console.log('diff', newVdom,':',oldDom);
+    // console.log('diff', newVdom,':',oldDom);
 
     if(!oldDom){
         return vnodeToDom(newVdom)
@@ -53,10 +53,8 @@ export default function diff(newVdom, oldDom) {
 
 
 function diffTxtDom(newVdom, oldDom) {
-    console.log('diffTxtDom',newVdom,typeof newVdom,':',oldDom);
     let dom = oldDom;
     if (oldDom && oldDom.nodeType === 3) {//老节点是文本节点
-        console.log('oldDom.textContent:',oldDom.textContent,typeof oldDom.textContent);
         if (oldDom.textContent !== newVdom) {
             oldDom.textContent = newVdom
         }
@@ -71,7 +69,7 @@ function diffTxtDom(newVdom, oldDom) {
 
 
 function diffNotTxtDom(newVdom, oldDom) {
-    console.log('diffNotTxtDom');
+    // console.log('diffNotTxtDom');
     const newDom = document.createElement(newVdom.tag);
     [...oldDom.childNodes].map(childNode => newDom.appendChild);//将旧节点子元素移动到新节点下
 
@@ -81,7 +79,7 @@ function diffNotTxtDom(newVdom, oldDom) {
 }
 
 function diffComponent(newVdom, oldDom) {
-    console.log('diffComponent');
+    // console.log('diffComponent');
     let newDom = oldDom
     if (oldDom._component && oldDom._component.constructor !== newVdom.tag) {//新组件和旧组件不是同一个
         newDom = vnodeToDom(newVdom);
@@ -110,13 +108,11 @@ function diffComponent(newVdom, oldDom) {
  * */
 
 function diffChild(newVdom, oldDom) {
-    console.log('diffChild', newVdom,oldDom,oldDom._component);
 
     const keyed = {};
     const childs = [];
     const oldChildDoms = oldDom ? oldDom.childNodes || [] : [];
 
-    console.log('oldChildDoms:',oldChildDoms);
     for (let i = 0; i < oldChildDoms.length; i++) {
         let childNode = oldChildDoms[i];
         if (childNode.key) {
@@ -167,7 +163,6 @@ function diffChild(newVdom, oldDom) {
             }
 
             let result = diff(newVchild,child);//如果没有匹配到 则直接生成虚拟dom的真实dom
-            console.log('result:',result,child,result === child);
 
 
             if(result === child){

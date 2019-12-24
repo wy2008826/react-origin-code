@@ -1,14 +1,49 @@
 import {renderComponent} from '../react-dom'
 import _ from 'wy-utils';
 
-const queue = [];
+//
+const defer = fn => Promise.resolve().then(() => {
+    fn()
+});
 
+
+const queue = [];
+const renderQueue = [];//组件队列
 function enqueueState(stateChange, component) {
     queue.push({
         stateChange,
         component
-    })
+    });
+
+    //插入需要更新的component队列 不能重复 避免重复render
+    if(!renderQueue.some(renderComp =>renderComp ===component)){
+        renderQueue.push(component);
+    }
 }
+
+function flush(){
+    let change,component;
+
+    //清空queue队列
+    while(change = queue.shift()){
+        const {
+            stateChange,
+            component
+        } = change
+        if(!component.prevState){
+            component.prevState = Object.assign({},component.state)
+        }
+        Object.assign(change.component.state,_.isFunction(stateChange) ? stateChange(component.prevState,component.props) : stateChange,stateChange);
+        component.prevState = component.state;//这里需要更新prevState
+    }
+
+    //执行render
+    while(component = renderQueue.shift()){
+        console.log('renderQueue:',component,component.state,renderQueue.length);
+        renderComponent(component)
+    }
+}
+
 
 class Component {
     constructor(props = {}) {
@@ -19,12 +54,24 @@ class Component {
     /**
      * 支持函数式传参
      * 优化，避免段时间内不停地setState导致的频繁渲染问题
+     * 关键：
+     * 1、同步更新component.state
+     * 2、将需要更新的组件放入renderComponent队列中，队列中的组件不能重复，避免组件重复渲染
+     * 3、异步渲染renderComponent队列
+     *
+     *
      * **/
+
     setState(changedState) {
-        enqueueState(_.isFunction(changedState) ? changedState(this.state) : changedState, this);
+        //将changedState放入 队列中  同步更新
+        // enqueueState(_.isFunction(changedState) ? changedState(this.state) : changedState, this);
+        enqueueState(changedState, this);
+        //异步渲染
+        defer(flush);
+
+
         // Object.assign(this.state, _.isFunction(changedState) ? changedState(this.state) : this.state, changedState || {});
-        //将changedState放入 队列中
-        renderComponent(this);
+        // renderComponent(this);
     }
 }
 
